@@ -22,7 +22,7 @@ fi
 
 
 # Set the version with default if not provided
-version=${custom_version:-"/Evolution-X-$(date '+%Y%m%d')"}
+version=${custom_version:-"Evolution-X-$(date '+%Y%m%d')"}
 
 # Check if the tag already exists
 if gh release view "$version" &> /dev/null; then
