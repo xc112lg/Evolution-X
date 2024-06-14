@@ -16,20 +16,26 @@ jobs:
 
     - name: Delete all tags
       run: |
-        git tag -l | xargs -n 1 git push --delete origin
-        git tag -l | xargs git tag -d
+        tags=$(git tag -l)
+        if [ -n "$tags" ]; then
+          for tag in $tags; do
+            git push origin :refs/tags/$tag
+            git tag -d $tag
+          done
+        else
+          echo "No tags found."
+        fi
 
     - name: Get releases
       id: releases
       run: |
         releases=$(gh api repos/${{ github.repository }}/releases -q '.[].id')
-        echo "::set-output name=releases::${releases}"
+        echo "releases=$releases" >> $GITHUB_ENV
 
     - name: Delete releases
-      if: steps.releases.outputs.releases != ''
+      if: env.releases != ''
       run: |
-        for release in ${{ steps.releases.outputs.releases }}
-        do
+        for release in ${{ env.releases }}; do
           gh api --method DELETE repos/${{ github.repository }}/releases/${release}
         done
 
