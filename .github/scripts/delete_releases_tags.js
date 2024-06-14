@@ -25,6 +25,24 @@ async function deleteReleases() {
   }
 }
 
+async function deleteDrafts() {
+  try {
+    const drafts = await axiosInstance.get('/releases', {
+      params: {
+        per_page: 100,  // Adjust this number if you have more drafts
+        page: 1,
+        draft: true
+      }
+    });
+    for (const draft of drafts.data) {
+      console.log(`Deleting draft: ${draft.tag_name}`);
+      await axiosInstance.delete(`/releases/${draft.id}`);
+    }
+  } catch (error) {
+    console.error(`Failed to delete drafts: ${error.message}`);
+  }
+}
+
 async function deleteTags() {
   try {
     const tags = await axiosInstance.get('/tags');
@@ -38,6 +56,7 @@ async function deleteTags() {
 }
 
 async function run() {
+  await deleteDrafts();
   await deleteReleases();
   await deleteTags();
 }
