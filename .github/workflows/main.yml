@@ -1,43 +1,37 @@
-name: tag cleaner
+name: Delete Tags and Releases
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  delete_tags_and_releases:
+  delete-tags-releases:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Delete Git Tags
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Delete all tags
       run: |
-        # Delete all Git tags
-        tags=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags" | jq -r '.[].ref' | awk -F'/tags/' '{print $2}')
-        for tag in $tags; do
-          git push origin --delete $tag
-          curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/git/refs/tags/$tag"
+        git tag -l | xargs -n 1 git push --delete origin
+        git tag -l | xargs git tag -d
+
+    - name: Get releases
+      id: releases
+      run: |
+        releases=$(gh api repos/${{ github.repository }}/releases -q '.[].id')
+        echo "::set-output name=releases::${releases}"
+
+    - name: Delete releases
+      if: steps.releases.outputs.releases != ''
+      run: |
+        for release in ${{ steps.releases.outputs.releases }}
+        do
+          gh api --method DELETE repos/${{ github.repository }}/releases/${release}
         done
 
-    - name: Delete Releases
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
-        # Delete GitHub releases
-        releases=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases" | jq -r '.[].id')
-        for release_id in $releases; do
-          # Delete associated assets of the release
-          assets=$(curl -s -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$release_id/assets" | jq -r '.[].id')
-          for asset_id in $assets; do
-            curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/assets/$asset_id"
-          done
-          
-          # Delete the release itself
-          curl -X DELETE -H "Authorization: token $GITHUB_TOKEN" "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
-        done
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
