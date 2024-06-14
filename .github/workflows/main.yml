@@ -1,51 +1,25 @@
-name: Delete Tags and Releases
+name: Delete all releases and tags
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
-  delete-tags-releases:
+  delete:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Install GitHub CLI
-      run: sudo apt-get install -y gh
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
-    - name: Authenticate GitHub CLI
-      run: gh auth login --with-token "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+    - name: Install dependencies
+      run: npm install axios
 
-    - name: Delete all tags
-      run: |
-        tags=$(git tag -l)
-        if [ -n "$tags" ]; then
-          for tag in $tags; do
-            git push origin :refs/tags/$tag
-            git tag -d $tag
-          done
-        else
-          echo "No tags found."
-        fi
-
-    - name: Get releases
-      id: get_releases
-      run: |
-        gh api repos/${{ github.repository }}/releases -q '.[].id' > releases.txt
-
-    - name: Delete releases
-      run: |
-        if [ -s releases.txt ]; then
-          while IFS= read -r release; do
-            gh api --method DELETE repos/${{ github.repository }}/releases/${release}
-          done < releases.txt
-        else
-          echo "No releases found."
-        fi
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    - name: Run delete script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: node .github/scripts/delete_releases_tags.js
