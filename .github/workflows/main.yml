@@ -29,15 +29,17 @@ jobs:
     - name: Get releases
       id: get_releases
       run: |
-        releases=$(gh api repos/${{ github.repository }}/releases -q '.[].id')
-        echo "releases=$releases" >> $GITHUB_ENV
+        gh api repos/${{ github.repository }}/releases -q '.[].id' > releases.txt
 
     - name: Delete releases
-      if: env.releases != ''
       run: |
-        for release in ${{ env.releases }}; do
-          gh api --method DELETE repos/${{ github.repository }}/releases/${release}
-        done
+        if [ -s releases.txt ]; then
+          while IFS= read -r release; do
+            gh api --method DELETE repos/${{ github.repository }}/releases/${release}
+          done < releases.txt
+        else
+          echo "No releases found."
+        fi
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
