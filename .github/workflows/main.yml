@@ -30,6 +30,8 @@ jobs:
       id: get_releases
       run: |
         gh api repos/${{ github.repository }}/releases -q '.[].id' > releases.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: Delete releases
       run: |
@@ -40,6 +42,5 @@ jobs:
         else
           echo "No releases found."
         fi
-
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
