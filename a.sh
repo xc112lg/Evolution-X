@@ -36,6 +36,8 @@ if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" 
     echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
     exit 1
 fi
+
+rm -rf h870/*eng* h872/*eng* us997/*eng* 
 mv h870/* h872/* us997/* ./Evolution-X/ 
 
 export GH_TOKEN=$(cat ../gh_token.txt)
