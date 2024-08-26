@@ -49,10 +49,10 @@ done
 # git commit -m "update"
 # git push 
 # cd ..
-# if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
-#     echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
-#     exit 1
-# fi
+if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
+    echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
+    exit 1
+fi
 
 #rm -rf h870/*eng* h872/*eng* us997/*eng* 
 #rm -rf h870/*ota* h872/*ota* us997/*ota* 
@@ -60,6 +60,7 @@ done
 
 export GH_TOKEN=$(cat gh_token.txt)
 gh auth login --with-token $GH_TOKEN
+rm -rf Evolution-X
 git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
 mv h870/* h872/* us997/* ./Evolution-X/ 
 cd Evolution-X
