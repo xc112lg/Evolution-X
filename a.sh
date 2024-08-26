@@ -16,10 +16,7 @@ find out/target/product/*/ -name "recovery.img" | while read recovery; do
     rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
 done
 
-cp out/target/product/h872/lineage-21.0-20240826-UNOFFICIAL-h872.zip lineage-21.0-20240826-UNOFFICIAL-h872.zip
 
-
-ls
 
 #out/target/product/*/recovery.img out/target/product/*/*.json out/target/product/*/changelog_*.txt 
 #mv h870/recovery.img h870/recoveryh870.img
@@ -54,7 +51,7 @@ if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" 
 fi
 
 #rm -rf h870/*eng* h872/*eng* us997/*eng* 
-#rm -rf h870/*ota* h872/*ota* us997/*ota* 
+rm -rf h870/*ota* h872/*ota* us997/*ota* 
 
 
 export GH_TOKEN=$(cat gh_token.txt)
