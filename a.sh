@@ -8,6 +8,7 @@ rm Evolution-X/*.txt
 
 rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
 
+
 find out/target/product/*/ -name "recovery.img" | while read recovery; do
     folder_name=$(basename $(dirname "$recovery"))
     destination_dir=$(basename $(dirname "$recovery"))
@@ -15,9 +16,10 @@ find out/target/product/*/ -name "recovery.img" | while read recovery; do
     rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
 done
 
+cp out/target/product/h872/lineage-21.0-20240826-UNOFFICIAL-h872.zip lineage-21.0-20240826-UNOFFICIAL-h872.zip
 
 
-
+ls
 
 #out/target/product/*/recovery.img out/target/product/*/*.json out/target/product/*/changelog_*.txt 
 #mv h870/recovery.img h870/recoveryh870.img
