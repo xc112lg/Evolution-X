@@ -57,8 +57,8 @@ fi
 
 export GH_TOKEN=$(cat gh_token.txt)
 gh auth login --with-token $GH_TOKEN
-rm -rf Evolution-X
-git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
+#rm -rf Evolution-X
+#git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
 mv h870/* h872/* us997/* ./Evolution-X/ 
 cd Evolution-X
 chmod u+x multi_upload.sh
