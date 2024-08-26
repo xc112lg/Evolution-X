@@ -6,7 +6,7 @@ rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
 
-#rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
+rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
 
 find out/target/product/*/ -name "recovery.img" | while read recovery; do
     folder_name=$(basename $(dirname "$recovery"))
