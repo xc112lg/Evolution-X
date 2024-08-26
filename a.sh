@@ -6,18 +6,10 @@ rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
 
-for file in out/target/product/*/*.zip; do
-    folder_name=$(basename $(dirname "$file"))
-    file_name=$(basename "$file")
-    mkdir -p "$folder_name"
-    cp "$file" "$folder_name/$file_name"
-done
+rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
 
-# Copy and rename recovery.img
-for recovery in out/target/product/*/recovery.img; do
-    folder_name=$(basename $(dirname "$recovery"))
-    cp "$recovery" "$folder_name/recovery${folder_name}.img"
-done
+
+
 
 
 
