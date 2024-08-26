@@ -5,10 +5,26 @@ rm Evolution-X/*.zip
 rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
-crave pull out/target/product/*/*.zip 
+
+for file in out/target/product/*/*.zip; do
+    folder_name=$(basename $(dirname "$file"))
+    file_name=$(basename "$file")
+    mkdir -p "$folder_name"
+    cp "$file" "$folder_name/$file_name"
+done
+
+# Copy and rename recovery.img
+for recovery in out/target/product/*/recovery.img; do
+    folder_name=$(basename $(dirname "$recovery"))
+    cp "$recovery" "$folder_name/recovery${folder_name}.img"
+done
+
+
+
+
 #out/target/product/*/recovery.img out/target/product/*/*.json out/target/product/*/changelog_*.txt 
 #mv h870/recovery.img h870/recoveryh870.img
-mv h872/recovery.img h872/recoveryh872.img
+
 #mv us997/recovery.img us997/recoveryus997.img
 
 # mkdir -p temp
@@ -38,8 +54,8 @@ mv h872/recovery.img h872/recoveryh872.img
 #     exit 1
 # fi
 
-rm -rf h870/*eng* h872/*eng* us997/*eng* 
-rm -rf h870/*ota* h872/*ota* us997/*ota* 
+#rm -rf h870/*eng* h872/*eng* us997/*eng* 
+#rm -rf h870/*ota* h872/*ota* us997/*ota* 
 mv h870/* h872/* us997/* ./Evolution-X/ 
 
 export GH_TOKEN=$(cat gh_token.txt)
