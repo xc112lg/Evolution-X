@@ -5,6 +5,7 @@ rm Evolution-X/*.zip
 rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
+sudo apt-get install xz-utils
 
 rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
 
