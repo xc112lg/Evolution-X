@@ -7,17 +7,17 @@ rm Evolution-X/*.txt
 #crave ssh -- ls
 sudo apt-get install xz-utils -y
 
-rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
+# rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
 
 
-find out/target/product/*/ -name "system.img" | while read recovery; do
-    folder_name=$(basename $(dirname "$recovery"))
-    destination_dir=$(basename $(dirname "$recovery"))
-    mkdir -p "$destination_dir"
-    rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
-done
-
-
+# find out/target/product/*/ -name "system.img" | while read recovery; do
+#     folder_name=$(basename $(dirname "$recovery"))
+#     destination_dir=$(basename $(dirname "$recovery"))
+#     mkdir -p "$destination_dir"
+#     rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
+# done
+mkdir -p tdgsi_a64_ab
+cp out/target/product/tdgsi_a64_ab/system.img tdgsi_a64_ab
 
 if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
     echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
