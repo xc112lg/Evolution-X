@@ -16,8 +16,8 @@ sudo apt-get install xz-utils -y
 #     mkdir -p "$destination_dir"
 #     rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
 # done
-mkdir -p tdgsi_a64_ab
-cp out/target/product/tdgsi_a64_ab/system.img tdgsi_a64_ab
+mkdir -p phhgsi_arm64_ab
+cp out/target/product/phhgsi_arm64_ab/system.img phhgsi_arm64_ab
 
 if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
     echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
@@ -38,7 +38,7 @@ cd -
 
 #rm -rf Evolution-X
 #git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
-mv phhgsi_arm64_ab//* ./Evolution-X/ 
+mv phhgsi_arm64_ab/* ./Evolution-X/ 
 cd Evolution-X
 chmod u+x multi_upload.sh
 . multi_upload.sh
