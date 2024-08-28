@@ -6,7 +6,12 @@ rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
 
-rsync -av --include='*/' --include='*.zip' --exclude='*' out/target/product/ ./
+find out/target/product/ -maxdepth 1 -type f -name '*.zip' > filelist.txt
+find out/target/product/ -mindepth 1 -maxdepth 1 -type d | while read dir; do
+  find "$dir" -maxdepth 1 -type f -name '*.zip'
+done >> filelist.txt
+sed -i 's|^out/target/product/||' filelist.txt
+rsync -av --files-from=filelist.txt --relative out/target/product/ ./
 
 
 find out/target/product/*/ -name "recovery.img" | while read recovery; do
