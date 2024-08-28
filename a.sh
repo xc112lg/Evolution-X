@@ -51,7 +51,7 @@ if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" 
 fi
 
 #rm -rf h870/*eng* h872/*eng* us997/*eng* 
-rm -rf h870/*ota* h872/*ota* us997/*ota* 
+#rm -rf h870/*ota* h872/*ota* us997/*ota* 
 
 
 export GH_TOKEN=$(cat gh_token.txt)
