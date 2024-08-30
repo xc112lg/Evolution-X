@@ -19,7 +19,7 @@ sudo apt-get install xz-utils -y
 mkdir -p phhgsi_arm64_ab
 cp out/target/product/phhgsi_arm64_ab/system.img phhgsi_arm64_ab
 
-if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
+if [ -z "$(find phhgsi_arm64_ab -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
     echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
     exit 1
 fi
