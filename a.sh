@@ -14,12 +14,37 @@ sed -i 's|^out/target/product/||' filelist.txt
 rsync -av --files-from=filelist.txt --relative out/target/product/ ./
 
 
-find out/target/product/*/ -name "recovery.img" | while read recovery; do
-    folder_name=$(basename $(dirname "$recovery"))
-    destination_dir=$(basename $(dirname "$recovery"))
-    mkdir -p "$destination_dir"
-    rsync -av "$recovery" "$destination_dir/recovery${folder_name}.img"
-done
+# Find recovery.img files at the top level of out/target/product/
+find out/target/product/ -maxdepth 1 -type f -name 'recovery.img' > filelist.txt
+
+# Find recovery.img files in subdirectories one level deep
+find out/target/product/ -mindepth 1 -maxdepth 1 -type d | while read dir; do
+  find "$dir" -maxdepth 1 -type f -name 'recovery.img'
+done >> filelist.txt
+
+# Remove the leading out/target/product/ path from each entry
+sed -i 's|^out/target/product/||' filelist.txt
+
+# Sync the listed recovery.img files while preserving the directory structure
+rsync -av --files-from=filelist.txt --relative out/target/product/ ./
+
+# Rename each recovery.img file to include its folder name
+while IFS= read -r file; do
+  # Extract the folder name from the file path
+  foldername=$(dirname "$file")
+  filename=$(basename "$file")
+
+  # If the file is at the top level, use "top_level" as the folder name
+  if [ "$foldername" = "." ]; then
+    new_name="top_level_$filename"
+  else
+    new_name="${foldername}_$filename"
+  fi
+
+  # Rename the recovery.img file to foldername_recovery.img
+  mv "$file" "${foldername}/${new_name}"
+done < filelist.txt
+
 
 
 
