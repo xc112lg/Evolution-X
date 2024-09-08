@@ -180,6 +180,14 @@ if ! gh auth status &> /dev/null; then
 else
     echo "Already authenticated with GitHub."
 fi
+
+
+if ! gh auth status &> /dev/null; then
+    # User not authenticated, perform login
+    gh auth login --with-token $GH_TOKEN
+else
+    echo "Already authenticated with GitHub."
+fi
 #rm -rf Evolution-X
 #git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
 mv h870/* h872/* us997/* ./Evolution-X/ 
