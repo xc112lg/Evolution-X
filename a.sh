@@ -1,4 +1,30 @@
 #!/bin/bash
+
+if ! command -v gh &> /dev/null; then
+    echo "GitHub CLI 'gh' not found. Downloading and installing the latest version..."
+    
+    # Get the latest release version number from GitHub API
+    latest_version=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+    
+    # Download the latest release
+    wget "https://github.com/cli/cli/releases/download/${latest_version}/gh_${latest_version#v}_linux_amd64.tar.gz"
+    
+    # Extract and install
+    tar -xvf "gh_${latest_version#v}_linux_amd64.tar.gz"
+    sudo mv gh_*_linux_amd64/bin/gh /usr/local/bin/
+    
+    echo "GitHub CLI 'gh' version ${latest_version} installed successfully."
+else
+    echo "GitHub CLI 'gh' is already installed."
+fi
+
+
+
+
+
+
+
+
 source_folder="."
 rm -rf h870/* h872/* us997/* 
 rm Evolution-X/*.zip
@@ -14,36 +40,6 @@ sed -i 's|^out/target/product/||' filelist.txt
 rsync -av --files-from=filelist.txt --relative out/target/product/ ./
 
 
-# Find recovery.img files at the top level of out/target/product/
-find out/target/product/ -maxdepth 1 -type f -name 'recovery.img' > filelist.txt
-
-# Find recovery.img files in subdirectories one level deep
-find out/target/product/ -mindepth 1 -maxdepth 1 -type d | while read dir; do
-  find "$dir" -maxdepth 1 -type f -name 'recovery.img'
-done >> filelist.txt
-
-# Remove the leading out/target/product/ path from each entry
-sed -i 's|^out/target/product/||' filelist.txt
-
-# Sync the listed recovery.img files while preserving the directory structure
-rsync -av --files-from=filelist.txt --relative out/target/product/ ./
-
-# Rename each recovery.img file to include its folder name
-while IFS= read -r file; do
-  # Extract the folder name from the file path
-  foldername=$(dirname "$file")
-  filename=$(basename "$file")
-
-  # If the file is at the top level, use "top_level" as the folder name
-  if [ "$foldername" = "." ]; then
-    new_name="top_level_$filename"
-  else
-    new_name="${foldername}_$filename"
-  fi
-
-  # Rename the recovery.img file to foldername_recovery.img
-  mv "$file" "${foldername}/${new_name}"
-done < filelist.txt
 
 
 
