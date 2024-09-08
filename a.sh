@@ -25,11 +25,7 @@ fi
 
 
 
-source_folder="."
-rm -rf h870/* h872/* us997/* 
-rm Evolution-X/*.zip
-rm Evolution-X/*.img
-rm Evolution-X/*.txt
+
 #crave ssh -- ls
 
 
@@ -144,10 +140,33 @@ rm filelist.txt
 # git commit -m "update"
 # git push 
 # cd ..
-if [ -z "$(find "$source_folder" -type f \( -name "*.zip" -o -name "*.img" \))" ]; then
-    echo "No .zip or .img files found in $source_folder or its subdirectories. Exiting."
+
+source_folder="."
+rm -rf h870/* h872/* us997/* 
+rm Evolution-X/*.zip
+rm Evolution-X/*.img
+rm Evolution-X/*.txt
+
+specific_folders=("h870" "h872" "us997")
+
+# Check for .zip or .img files in the specific subdirectories
+found_files=0
+for folder in "${specific_folders[@]}"; do
+    if [ -d "$folder" ]; then
+        if find "$folder" -type f \( -name "*.zip" -o -name "*.img" \) | grep -q .; then
+            found_files=1
+            break
+        fi
+    fi
+done
+
+if [ $found_files -eq 0 ]; then
+    echo "No .zip or .img files found in specified folders (${specific_folders[*]}). Exiting."
     exit 1
 fi
+
+echo "Files found in specified folders."
+
 
 #rm -rf h870/*eng* h872/*eng* us997/*eng* 
 #rm -rf h870/*ota* h872/*ota* us997/*ota* 
