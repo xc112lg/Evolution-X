@@ -1,22 +1,6 @@
 #!/bin/bash
 
-if ! command -v gh &> /dev/null; then
-    echo "GitHub CLI 'gh' not found. Downloading and installing the latest version..."
-    
-    # Get the latest release version number from GitHub API
-    latest_version=$(curl -s https://api.github.com/repos/cli/cli/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-    
-    # Download the latest release
-    wget "https://github.com/cli/cli/releases/download/${latest_version}/gh_${latest_version#v}_linux_amd64.tar.gz"
-    
-    # Extract and install
-    tar -xvf "gh_${latest_version#v}_linux_amd64.tar.gz"
-    sudo mv gh_*_linux_amd64/bin/gh /usr/local/bin/
-    
-    echo "GitHub CLI 'gh' version ${latest_version} installed successfully."
-else
-    echo "GitHub CLI 'gh' is already installed."
-fi
+
 
 
 
