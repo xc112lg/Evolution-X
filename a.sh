@@ -59,7 +59,7 @@ fi
 #rm -rf h870/*ota* h872/*ota* us997/*ota* 
 
 
-export GH_TOKEN=$(cat gh_token.txt)
+#export GH_TOKEN=$(cat gh_token.txt)
 gh auth login --with-token $GH_TOKEN
 #rm -rf Evolution-X
 #git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
