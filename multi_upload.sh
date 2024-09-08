@@ -94,7 +94,7 @@ filenames=(*.img *.zip *.xz)
 # Create the release on GitHub
 if ! gh release create "$version" --title "Release $version" --notes "Release notes"; then
     echo "Error: Failed to create the release."
-    exit 1
+  #  exit 1
 fi
 
 # Upload the files to the release
