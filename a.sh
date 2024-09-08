@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf h870/* h872/* us997/* 
+
 if ! command -v gh &> /dev/null; then
     echo "GitHub CLI 'gh' not found. Downloading and installing the latest version..."
     
@@ -142,10 +144,8 @@ rm filelist.txt
 # cd ..
 
 source_folder="."
-rm -rf h870/* h872/* us997/* 
-rm Evolution-X/*.zip
-rm Evolution-X/*.img
-rm Evolution-X/*.txt
+
+
 
 specific_folders=("h870" "h872" "us997")
 
