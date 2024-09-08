@@ -191,6 +191,9 @@ fi
 #rm -rf Evolution-X
 #git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
 mv h870/* h872/* us997/* ./Evolution-X/ 
+ls
+echo 1
 cd Evolution-X
+echo 2
 chmod u+x multi_upload.sh
 . multi_upload.sh
