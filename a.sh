@@ -32,12 +32,85 @@ rm Evolution-X/*.img
 rm Evolution-X/*.txt
 #crave ssh -- ls
 
+
 find out/target/product/ -maxdepth 1 -type f -name '*.zip' > filelist.txt
 find out/target/product/ -mindepth 1 -maxdepth 1 -type d | while read dir; do
   find "$dir" -maxdepth 1 -type f -name '*.zip'
 done >> filelist.txt
 sed -i 's|^out/target/product/||' filelist.txt
 rsync -av --files-from=filelist.txt --relative out/target/product/ ./
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Define directories
+SOURCE_DIR="out/target/product/"
+DEST_DIR="./"
+
+# Create the destination directory if it doesn't exist
+mkdir -p "$DEST_DIR"
+
+# Find recovery.img files at the top level of SOURCE_DIR and subdirectories
+find "$SOURCE_DIR" -maxdepth 1 -type f -name 'recovery.img' > filelist.txt
+find "$SOURCE_DIR" -mindepth 1 -maxdepth 1 -type d | while read dir; do
+  find "$dir" -maxdepth 1 -type f -name 'recovery.img'
+done >> filelist.txt
+
+# Remove the leading SOURCE_DIR path from each entry
+sed -i "s|^$SOURCE_DIR||" filelist.txt
+
+# Sync the listed recovery.img files while preserving the directory structure
+rsync -av --files-from=filelist.txt --relative "$SOURCE_DIR" "$DEST_DIR"
+
+# Check if rsync succeeded
+if [ $? -ne 0 ]; then
+  echo "Error: rsync failed."
+  exit 1
+fi
+
+# Rename files in the destination folder
+while read file; do
+  # Determine the full path for the destination file
+  dest_file="$DEST_DIR/$file"
+  
+  # Skip if the file does not exist
+  if [ ! -f "$dest_file" ]; then
+    echo "Warning: File not found - $dest_file"
+    continue
+  fi
+
+  # Determine the new name and move the file
+  dir=$(dirname "$file")
+  base=$(basename "$file")
+  newname="${dir##*/}_recovery.img" # Extract the top-level directory name
+  new_path="$DEST_DIR/$dir/$newname"
+
+  # Create the directory if it does not exist
+  mkdir -p "$(dirname "$new_path")"
+
+  mv "$dest_file" "$new_path"
+done < filelist.txt
+
+# Check if renaming succeeded
+if [ $? -ne 0 ]; then
+  echo "Error: Renaming failed."
+  exit 1
+fi
+
+# Cleanup
+rm filelist.txt
 
 
 
