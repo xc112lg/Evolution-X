@@ -2,8 +2,6 @@
 
 
 
-ls
-
 # Get a list of zip files in the current folder
 zip_files=$(ls *.zip 2>/dev/null)
 
