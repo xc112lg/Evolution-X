@@ -167,7 +167,7 @@ fi
 
 echo "Files found in specified folders."
 
-ls
+
 #rm -rf h870/*eng* h872/*eng* us997/*eng* 
 #rm -rf h870/*ota* h872/*ota* us997/*ota* 
 
@@ -186,9 +186,9 @@ ls
 #rm -rf Evolution-X
 #git clone https://$GH_TOKENgithub.com/xc112lg/Evolution-X
 mv h870/* h872/* us997/* ./Evolution-X/ 
-ls
-echo 1
+
+
 cd Evolution-X
-echo 2
+
 chmod u+x multi_upload.sh
 . multi_upload.sh
