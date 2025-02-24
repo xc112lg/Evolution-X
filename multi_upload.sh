@@ -2,6 +2,26 @@
 
 
 
+if ! command -v gh &> /dev/null; then
+    echo "GitHub CLI 'gh' not found. Downloading and installing..."
+    wget https://github.com/cli/cli/releases/download/v2.67.0/gh_2.67.0_linux_amd64.tar.gz
+    tar -xvf gh_2.67.0_linux_amd64.tar.gz
+    sudo mv gh_*_linux_amd64/bin/gh /usr/local/bin/
+    echo "GitHub CLI 'gh' installed successfully."
+else
+    echo "GitHub CLI 'gh' is already installed."
+fi
+
+
+if ! gh auth status &> /dev/null; then
+    # User not authenticated, perform login
+    gh auth login --with-token $GH_TOKEN
+else
+    echo "Already authenticated with GitHub."
+fi
+
+
+
 # Get a list of zip files in the current folder
 zip_files=$(ls *.zip 2>/dev/null)
 
